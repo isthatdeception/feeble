@@ -5,6 +5,8 @@ build/
 tmp/
 temp/
 
+# env just not in the root but anywhere in the project should be ignored
+/**/*.env
 
 
 ### Node ###
