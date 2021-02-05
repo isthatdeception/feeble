@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { isEmpty, validate } from "class-validator";
 
-import { User } from "../entities/User";
+import User from "../entities/User";
 
 // for extra security
 import bcrypt from "bcrypt";
@@ -12,7 +12,7 @@ import cookie from "cookie";
 import { serialize } from "class-transformer";
 
 // custom middleware
-import auth from '../middleware/auth';
+import auth from "../middleware/auth";
 
 // regsiter route
 const register = async (req: Request, res: Response) => {
@@ -125,7 +125,7 @@ const login = async (req: Request, res: Response) => {
 
 // route to the user data for himself
 const me = async (_: Request, res: Response) => {
-  return res.json(res.locals.user)
+  return res.json(res.locals.user);
 };
 
 // logout route
@@ -151,6 +151,6 @@ const router = Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/me", auth, me);
-router.get('/logout', auth, logout)
+router.get("/logout", auth, logout);
 
 export default router;

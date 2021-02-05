@@ -1,31 +1,28 @@
 import { IsEmail, Length } from "class-validator";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
+  Entity as TOEntity,
   Column,
-  BaseEntity,
   Index,
-  CreateDateColumn,
-  UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from "typeorm";
 
 // for extra layer of security
 import bcrypt from "bcrypt";
 
 // for hiding some classes from the response
-import { classToPlain, Exclude } from "class-transformer";
+import { Exclude } from "class-transformer";
 
-@Entity("users")
-export class User extends BaseEntity {
+// relative import
+import Entity from "./Entity";
+import Post from "./Post";
+
+@TOEntity("users")
+export default class User extends Entity {
   constructor(user: Partial<User>) {
     super();
     Object.assign(this, user);
   }
-
-  @Exclude()
-  @PrimaryGeneratedColumn()
-  id: number;
 
   // index introduces performance when querying to the database
   @Index()
@@ -44,19 +41,12 @@ export class User extends BaseEntity {
   @Length(6, 255)
   password: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  // one to many relation by typeORM
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 6);
-  }
-
-  // to JSON
-  toJSON() {
-    return classToPlain(this);
   }
 }
