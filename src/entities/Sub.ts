@@ -10,7 +10,6 @@ import {
 // relative import
 import Entity from "./Entity";
 import User from "./User";
-import { makeId, slugify } from "../utils/helper";
 import Post from "./Post";
 
 @TOEntity("subs")

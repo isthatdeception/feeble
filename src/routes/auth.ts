@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 // for secure access to the app
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import { serialize } from "class-transformer";
 
 // custom middleware
 import auth from "../middleware/auth";
@@ -83,7 +82,7 @@ const login = async (req: Request, res: Response) => {
      * more advantages then the traditional login
      */
 
-    const token = jwt.sign({ username }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ username }, process.env.JWT_SECRET_KEY!);
 
     /**
      * Here we are storing token in the form of cookies
@@ -120,7 +119,10 @@ const login = async (req: Request, res: Response) => {
     );
 
     return res.json(user);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: 'Something went wrong' })
+  }
 };
 
 // route to the user data for himself

@@ -3,7 +3,6 @@ import { isEmpty } from "class-validator"; // validating the data
 import { getRepository } from "typeorm"; // query-builder
 
 // relative import
-import User from "../entities/User";
 import Sub from "../entities/Sub";
 import auth from "../middleware/auth";
 

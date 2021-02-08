@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, _: Response, next: NextFunction) => {
   /**
    * here password can be used as space so one must check for the password too
    * for the occurence of the space and not trim it together with all the body elements
