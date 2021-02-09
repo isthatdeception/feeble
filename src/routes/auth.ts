@@ -13,6 +13,19 @@ import cookie from "cookie";
 // custom middleware
 import auth from "../middleware/auth";
 
+// mapping errors
+const mapErrors = (errors: Object[]) => {
+  // to make an alternate object so we will fectch the first constraint
+  // out of all the validations
+
+  // reduce take an initial value
+
+  return errors.reduce((prev: any, err: any) => {
+    prev[err.property] = Object.entries(err.constraints)[0][1];
+    return prev;
+  }, {});
+};
+
 // regsiter route
 const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
@@ -34,7 +47,9 @@ const register = async (req: Request, res: Response) => {
     const user = new User({ email, username, password });
 
     errors = await validate(user);
-    if (errors.length > 0) return res.status(400).json({ errors });
+    if (errors.length > 0) {
+      return res.status(400).json(mapErrors(errors));
+    }
     await user.save();
 
     // RETURN THE USER
@@ -63,7 +78,7 @@ const login = async (req: Request, res: Response) => {
     // now we check for the input if we can match a username in our DB
     const user = await User.findOne({ username });
 
-    if (!user) return res.status(404).json({ error: "user not found!" });
+    if (!user) return res.status(404).json({ username: "user not found!" });
 
     /**
      * if user got found in db
@@ -121,7 +136,7 @@ const login = async (req: Request, res: Response) => {
     return res.json(user);
   } catch (err) {
     console.log(err);
-    return res.json({ error: 'Something went wrong' })
+    return res.json({ error: "Something went wrong" });
   }
 };
 

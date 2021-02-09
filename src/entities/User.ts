@@ -26,19 +26,20 @@ export default class User extends Entity {
 
   // index introduces performance when querying to the database
   @Index()
-  @IsEmail()
+  @IsEmail(undefined, { message: "Must be a vaild email address" })
+  @Length(1, 255, { message: "Email is empty" })
   @Column({ unique: true })
   email: string;
 
   // index introduces performance when querying to the database
   @Index()
-  @Length(3, 255, { message: "Username must be atleast 3 characters at long" })
+  @Length(3, 255, { message: "Must be atleast 3 characters long" })
   @Column({ unique: true })
   username: string;
 
   @Exclude()
   @Column()
-  @Length(6, 255)
+  @Length(6, 255, { message: "Must be atleast 6 characters long" })
   password: string;
 
   // one to many relation by typeORM

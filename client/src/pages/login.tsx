@@ -12,10 +12,8 @@ import InputGroup from "../components/inputGroup";
 
 export default function Register() {
   // use state
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [agreement, setagreement] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   const router = useRouter();
@@ -25,27 +23,13 @@ export default function Register() {
     // to stop reloading the page
     event.preventDefault();
 
-    /**
-     * agreement is needed to be checked coz if not one should not be able to login or 
-       register to our site 
-
-       i.e ensuring the user ticks the agreement policy while applying to register to be
-       to access the site
-     */
-
-    if (!agreement) {
-      setErrors({ ...errors, agreement: "You must agree to the T&C" });
-      return;
-    }
-
     try {
-      await Axios.post("/auth/register", {
-        email,
-        password,
+      await Axios.post("/auth/login", {
         username,
+        password,
       });
 
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       setErrors(err.response.data);
     }
@@ -54,8 +38,7 @@ export default function Register() {
   return (
     <div className="flex">
       <Head>
-        <title>Register</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Login</title>
       </Head>
 
       <div
@@ -65,36 +48,11 @@ export default function Register() {
 
       <div className="flex flex-col justify-center pl-6">
         <div className="w-70">
-          <h1 className="mb-2 text-lg font-medium">Sign up</h1>
+          <h1 className="mb-2 text-lg font-medium">Login</h1>
           <p className="mb-10 text-xs">
             By continuing, you agree to our User Agreement and Privacy Policy.
           </p>
           <form onSubmit={submitForm}>
-            <div className="mb-6">
-              <input
-                type="checkbox"
-                className="mr-1 cursor-pointer"
-                id="agreement"
-                checked={agreement}
-                onChange={(e) => setagreement(e.target.checked)}
-              />
-              <label htmlFor="agreement" className="text-xs cursor-pointer">
-                I agree to get emails about cool stuff on Feeble
-              </label>
-              <small className="block font-medium text-red-600">
-                {errors.agreement}
-              </small>
-            </div>
-
-            <InputGroup
-              className="mb-2"
-              type="email"
-              value={email}
-              setValue={setEmail}
-              placeholder="@EMAIL.."
-              error={errors.email}
-            />
-
             <InputGroup
               className="mb-2"
               type="text"
@@ -114,13 +72,13 @@ export default function Register() {
             />
 
             <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded ">
-              Sign up
+              Login
             </button>
           </form>
           <small>
-            Already have a feeble account ?
-            <Link href="/login">
-              <a className="ml-1 text-blue-500 uppercase">log In</a>
+            New to Feeble ? don't worry we got you
+            <Link href="/register">
+              <a className="ml-1 text-blue-500 uppercase">Sign up</a>
             </Link>
           </small>
         </div>
