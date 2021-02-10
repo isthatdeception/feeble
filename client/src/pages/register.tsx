@@ -8,7 +8,7 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 // component
-import InputGroup from "../components/inputGroup";
+import InputGroup from "../components/InputGroup";
 
 export default function Register() {
   // use state
@@ -52,7 +52,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-white">
       <Head>
         <title>Register</title>
         <link rel="icon" href="/favicon.ico" />
