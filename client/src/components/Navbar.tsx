@@ -3,7 +3,7 @@ import FeebleLogo from "../images/coffee.svg";
 
 const Navbar: React.FC = () => (
   <div>
-    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white item-center">
+    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-10 px-5 bg-white item-center">
       {/* logo and title */}
       <div className="flex items-center">
         <Link href="/">

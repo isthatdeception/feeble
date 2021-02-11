@@ -8,6 +8,8 @@ import {
   OneToMany,
 } from "typeorm";
 
+import { Expose } from "class-transformer";
+
 // relative import
 import Entity from "./Entity";
 import User from "./User";
@@ -44,6 +46,9 @@ export default class Post extends Entity {
   @Column()
   subName: string; // name of the sub this post belongs to
 
+  @Column()
+  username: string;
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
@@ -54,6 +59,10 @@ export default class Post extends Entity {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
+
+  @Expose() get url(): string {
+    return `/f/${this.subName}/${this.identifier}/${this.slug}`;
+  }
 
   @BeforeInsert()
   makeIdAndSlug() {

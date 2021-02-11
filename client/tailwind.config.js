@@ -23,10 +23,24 @@ module.exports = {
         70: "17.5rem",
         160: "40rem",
       },
+      container: false, // default container is set to false so that we can make our own one
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({ addComponents }) {
+      addComponents({
+        ".container": {
+          width: "100%",
+          marginLeft: "auto",
+          marginRight: "auto",
+          "@screen sm": { maxWidth: "640px" },
+          "@screen md": { maxWidth: "768px" },
+          "@screen lg": { maxWidth: "975px" },
+        },
+      });
+    },
+  ],
 };
