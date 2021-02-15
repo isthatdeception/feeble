@@ -10,13 +10,26 @@ import { useRouter } from "next/router";
 // component
 import InputGroup from "../components/InputGroup";
 
+// context
+import { useAuthDispatch, useAuthState } from "../context/auth";
+
 export default function Register() {
   // use state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
+  const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
+
   const router = useRouter();
+
+  /**
+   * if a user is already logged in, he can't use any manual login route
+   * also he should not be able to use, login while he has a valid token
+   */
+
+  if (authenticated) router.push("/");
 
   // submitting the form so the details should be posted to the server
   const submitForm = async (event: FormEvent) => {
@@ -24,10 +37,12 @@ export default function Register() {
     event.preventDefault();
 
     try {
-      await Axios.post("/auth/login", {
+      const res = await Axios.post("/auth/login", {
         username,
         password,
       });
+
+      dispatch("LOGIN", res.data);
 
       router.push("/");
     } catch (err) {

@@ -3,6 +3,10 @@ import { AppProps } from "next/app";
 import Axios from "axios";
 import { useRouter } from "next/router";
 
+// context
+import { AuthProvider } from "../context/auth";
+
+// style
 import "../styles/tailwind.css"; // custom css
 import "../styles/icons.css"; // made with iconmoon
 
@@ -23,8 +27,10 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      {!authRoute && <Navbar />}
-      <Component {...pageProps} />
+      <AuthProvider>
+        {!authRoute && <Navbar />}
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
   );
 }

@@ -17,3 +17,10 @@ export interface Post {
   commentCount?: number; // in the following fields
   userVote?: number; // i.e votescore, userscore and commentcount
 }
+
+export interface User {
+  username: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}

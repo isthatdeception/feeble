@@ -10,6 +10,9 @@ import { useRouter } from "next/router";
 // component
 import InputGroup from "../components/InputGroup";
 
+// context
+import { useAuthState } from "../context/auth";
+
 export default function Register() {
   // use state
   const [email, setEmail] = useState("");
@@ -18,7 +21,18 @@ export default function Register() {
   const [agreement, setagreement] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
+  const { authenticated } = useAuthState(); // context for register
+
   const router = useRouter();
+
+  /**
+   * if a user is already logged in, he can't use any manual register route
+   * also he should not be able to use, register while he has a valid token
+   *
+   * this makes it easier as system has to be more reliant toward token
+   */
+
+  if (authenticated) router.push("/");
 
   // submitting the form so the details should be posted to the server
   const submitForm = async (event: FormEvent) => {
