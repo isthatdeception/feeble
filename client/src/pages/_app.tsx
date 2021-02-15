@@ -4,6 +4,7 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 import "../styles/tailwind.css"; // custom css
+import "../styles/icons.css"; // made with iconmoon
 
 import Navbar from "../components/Navbar"; // navbar as a global thing for our page
 

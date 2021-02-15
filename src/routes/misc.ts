@@ -8,6 +8,7 @@ import Comment from "../entities/Comment";
 
 // middleware auth
 import auth from "../middleware/auth";
+import user from "../middleware/user";
 
 // misc routes that can be dynamic
 const vote = async (req: Request, res: Response) => {
@@ -77,6 +78,6 @@ const vote = async (req: Request, res: Response) => {
 };
 
 const router = Router();
-router.post("/vote", auth, vote);
+router.post("/vote", user, auth, vote);
 
 export default router;

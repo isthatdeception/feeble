@@ -13,4 +13,7 @@ export interface Post {
 
   // virtual fields
   url: string;
+  voteScore?: number; // ? dictates that the value can be nullable
+  commentCount?: number; // in the following fields
+  userVote?: number; // i.e votescore, userscore and commentcount
 }

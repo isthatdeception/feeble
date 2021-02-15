@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 
 // relative import
 import auth from "../middleware/auth";
+import user from "../middleware/user";
 import Post from "../entities/Post";
 import Sub from "../entities/Sub";
 import Comment from "../entities/Comment";
@@ -39,7 +40,13 @@ const getPosts = async (_: Request, res: Response) => {
   try {
     const posts = await Post.find({
       order: { createdAt: "DESC" },
+      relations: ["comments", "votes", "sub"],
     });
+
+    // if logged in we need to show their vote on the post
+    if (res.locals.user) {
+      posts.forEach((p) => p.setUserVote(res.locals.user));
+    }
 
     return res.json(posts);
   } catch (err) {
@@ -85,9 +92,9 @@ const commentOnPost = async (req: Request, res: Response) => {
 };
 
 const router = Router();
-router.post("/", auth, createPost);
-router.get("/", getPosts);
+router.post("/", user, auth, createPost); // need to be logged in
+router.get("/", user, getPosts); // even not logged in is K
 router.get("/:identifier/:slug", getPost);
-router.post("/:identifier/:slug/comments", auth, commentOnPost);
+router.post("/:identifier/:slug/comments", user, auth, commentOnPost);
 
 export default router;
