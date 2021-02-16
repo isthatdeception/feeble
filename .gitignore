@@ -136,8 +136,6 @@ psd
 thumb
 sketch
 
-migrations
-
 ### vscode ###
 .vscode/*
 !.vscode/settings.json

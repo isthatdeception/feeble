@@ -1,0 +1,37 @@
+
+
+// requirements for feeble app //
+
+// server side
+
+  / typescript // for striclty typing all the components, resulting in much less error prone app
+  / node
+  / postgres
+  / typeorm
+  / express // for routing
+  / dotenv // for safe scripting of the keys and hashes used in database
+
+// client side
+
+  / typescript // for strictly typing the components that save us from making errors
+  / node
+  / next js // a react framework
+  / server side rendering // key component of next js
+  / tailwind css
+  
+
+// dev
+
+  / typeorm-seeding
+  / dotenv
+  / concurrently
+  / swr hooks // for more fast server side rendering
+  / context
+
+// icons
+  / font-awesome
+  / iconmoon
+
+// api testing software
+
+  / insomnia

@@ -93,11 +93,14 @@ export default function PostCard({
                 src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                 className="w-6 h-6 mr-1 rounded-full cursor-pointer"
               />
-              <a className="text-xs font-bold cursor-pointer hover:underline">
-                /f/{subName}
-              </a>
             </>
           </Link>
+          <Link href={`/f/${subName}`}>
+            <a className="text-xs font-bold cursor-pointer hover:underline">
+              /f/{subName}
+            </a>
+          </Link>
+
           <p className="text-xs text-gray-400 p">
             <span className="mx-1">∙</span>
             posted by

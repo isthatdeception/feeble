@@ -2,6 +2,7 @@
 import { AppProps } from "next/app";
 import Axios from "axios";
 import { useRouter } from "next/router";
+import { SWRConfig } from "swr";
 
 // context
 import { AuthProvider } from "../context/auth";
@@ -25,12 +26,30 @@ function App({ Component, pageProps }: AppProps) {
   const authRoutes = ["/register", "/login"];
   const authRoute = authRoutes.includes(pathname);
 
+  const fetcher = async (url: string) => {
+    try {
+      const res = await Axios.get(url);
+      return res.data;
+    } catch (err) {
+      throw err.response.data;
+    }
+  };
+
   return (
     <>
-      <AuthProvider>
-        {!authRoute && <Navbar />}
-        <Component {...pageProps} />
-      </AuthProvider>
+      <SWRConfig
+        value={{
+          fetcher,
+          dedupingInterval: 10000,
+        }}
+      >
+        <AuthProvider>
+          {!authRoute && <Navbar />}
+          <div className={authRoute ? "" : "pt-12"}>
+            <Component {...pageProps} />
+          </div>
+        </AuthProvider>
+      </SWRConfig>
     </>
   );
 }
