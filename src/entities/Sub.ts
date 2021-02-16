@@ -21,24 +21,27 @@ export default class Sub extends Entity {
 
   @Index()
   @Column({ unique: true })
-  name: string
+  name: string;
 
   @Column()
-  title: string
+  title: string;
 
-  @Column({ type: 'text', nullable: true})
-  description: string
-
-  @Column({ nullable: true}) 
-  imageUrn: string // Urn : unique resource name
+  @Column({ type: "text", nullable: true })
+  description: string;
 
   @Column({ nullable: true })
-  bannerUrn: string
+  imageUrn: string; // Urn : unique resource name
+
+  @Column({ nullable: true })
+  bannerUrn: string;
+
+  @Column()
+  username: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
-  @OneToMany(() => Post, post => post.sub)
-  posts: Post[]
+  @OneToMany(() => Post, (post) => post.sub)
+  posts: Post[];
 }

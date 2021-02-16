@@ -32,6 +32,7 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+app.use(express.static("test")); // to expose images that is being uploaded
 
 app.get("/", (_, res) => res.send("Hello World"));
 app.use("/api/auth", authRoutes);
