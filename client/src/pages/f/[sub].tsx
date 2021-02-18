@@ -12,6 +12,7 @@ import Axios from "axios";
 // relative import
 import PostCard from "../../components/PostCard";
 import { Sub } from "../../types";
+import Sidebar from "../../components/Sidebar";
 
 import { useAuthState } from "../../context/auth";
 /**
@@ -161,6 +162,7 @@ export default function SubPage() {
             {/**Posts and Sidebar  */}
             <div className="container flex pt-5">
               <div className="w-160">{postsMarkUp}</div>
+              <Sidebar sub={sub} />
             </div>
           </>
         )}

@@ -1,4 +1,6 @@
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 
 // hook
 import useSWR from "swr";
@@ -9,12 +11,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 // relative import
 import PostCard from "../components/PostCard";
+import { Sub } from "../types";
 
 // plugin
 dayjs.extend(relativeTime);
 
 export default function Home() {
   const { data: posts } = useSWR("/posts");
+  const { data: topSubs } = useSWR("/misc/top-subs");
 
   return (
     <>
@@ -29,6 +33,40 @@ export default function Home() {
           ))}
         </div>
         {/** side bar */}
+        <div className="ml-6 w-80">
+          <div className="bg-white rounded">
+            <div className="p-4 border-b-2">
+              <p className="text-lg font-semibold text-center">
+                Top communities
+              </p>
+            </div>
+            <div>
+              {topSubs?.map((sub: Sub) => (
+                <div
+                  key={sub.name}
+                  className="flex items-center px-4 py-2 text-xs border-b"
+                >
+                  <div className="mr-2 overflow-hidden rounded-full cursor-pointer">
+                    <Link href={`/f/${sub.name}`}>
+                      <Image
+                        src={sub.imageUrl}
+                        alt="Sub"
+                        width={(6 * 16) / 4}
+                        height={(6 * 16) / 4}
+                      />
+                    </Link>
+                  </div>
+                  <Link href={`/f/${sub.name}`}>
+                    <a className="font-bold hover:cursor-pointer">
+                      /f/{sub.name}
+                    </a>
+                  </Link>
+                  <p className="ml-auto font-medium">{sub.postCount}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
