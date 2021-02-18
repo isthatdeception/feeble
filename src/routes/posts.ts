@@ -62,8 +62,13 @@ const getPost = async (req: Request, res: Response) => {
   try {
     const post = await Post.findOneOrFail(
       { identifier, slug },
-      { relations: ["sub"] }
+      { relations: ["sub", "votes", "comments"] }
     );
+
+    // user votes
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
+    }
 
     return res.json(post);
   } catch (err) {
@@ -94,7 +99,7 @@ const commentOnPost = async (req: Request, res: Response) => {
 const router = Router();
 router.post("/", user, auth, createPost); // need to be logged in
 router.get("/", user, getPosts); // even not logged in is K
-router.get("/:identifier/:slug", getPost);
+router.get("/:identifier/:slug", user, getPost);
 router.post("/:identifier/:slug/comments", user, auth, commentOnPost);
 
 export default router;

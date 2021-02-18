@@ -8,17 +8,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 // relative import
 import { Post } from "../types";
+import ActionButton from "./ActionButton";
 
 dayjs.extend(relativeTime);
-
-// component for avoiding code repetition
-const ActionButton = ({ children }) => {
-  return (
-    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
-      {children}
-    </div>
-  );
-};
 
 // interface
 interface PostCardProps {
@@ -42,7 +34,7 @@ export default function PostCard({
   },
 }: PostCardProps) {
   // for votes to funcitonal on postcard
-  const vote = async (value) => {
+  const vote = async (value: number) => {
     try {
       const res = await Axios.post("/misc/vote", {
         identifier,
