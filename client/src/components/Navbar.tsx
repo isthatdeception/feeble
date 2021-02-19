@@ -28,13 +28,13 @@ const Navbar: React.FC = () => {
               <FeebleLogo className="w-8 h-8 mr-2" />
             </a>
           </Link>
-          <span className="text-2xl font-semibold">
+          <span className="mr-2 text-2xl font-semibold">
             <Link href="/">feeble</Link>
           </span>
         </div>
 
         {/* Search Input */}
-        <div className="flex items-center py-2 mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
+        <div className="flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
           <i className="pl-5 pr-3 text-gray-500 fas fa-search"></i>
           <input
             type="text"
@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Auth Buttons */}
-        <div className="flex">
+        <div className="flex ml-2">
           {/* now for auth buttons */}
           {!loading &&
             (authenticated ? (

@@ -8,13 +8,14 @@ import {
   OneToMany,
 } from "typeorm";
 
+import { Exclude, Expose } from "class-transformer";
+
 // relative import
 import Entity from "./Entity";
 import Post from "./Post";
 import User from "./User";
 import { makeId } from "../utils/helper";
 import Vote from "./Vote";
-import { Exclude } from "class-transformer";
 
 @TOEntity("comments")
 export default class Comment extends Entity {
@@ -43,6 +44,10 @@ export default class Comment extends Entity {
   @Exclude()
   @OneToMany(() => Vote, (vote) => vote.comment)
   votes: Vote[];
+
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
+  }
 
   // whether the user upvoted his comment itself.
   protected userVote: number;
