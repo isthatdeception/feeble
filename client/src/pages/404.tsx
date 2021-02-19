@@ -3,7 +3,7 @@ import Link from "next/link";
 // custom error 404 page
 export default function notFound() {
   return (
-    <div className="flex flex-col items-center pt-10">
+    <div className="flex flex-col items-center pt-10 my-5">
       <h1 className="pt-1 mt-10 mb-4 font-bold text-blue-800 text-7xl">
         Oops !
       </h1>
