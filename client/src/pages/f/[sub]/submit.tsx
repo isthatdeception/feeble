@@ -105,7 +105,7 @@ export default function submit() {
  * the server side of the app
  *
  * as we cannot allow one to post something even without logging in or
- * take a glimpse of the submit page wihout logging in
+ * take a glimpse of the submit page without logging in
  */
 
 /// is user is authenticated ?

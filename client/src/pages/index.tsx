@@ -11,14 +11,19 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 // relative import
 import PostCard from "../components/PostCard";
-import { Sub } from "../types";
+import { Post, Sub } from "../types";
+import { useAuthState } from "../context/auth";
 
 // plugin
 dayjs.extend(relativeTime);
 
 export default function Home() {
-  const { data: posts } = useSWR("/posts");
-  const { data: topSubs } = useSWR("/misc/top-subs");
+  // local context
+  const { data: posts } = useSWR<Post[]>("/posts");
+  const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
+
+  // global state
+  const { authenticated } = useAuthState();
 
   return (
     <>
@@ -27,13 +32,13 @@ export default function Home() {
       </Head>
       <div className="container flex pt-4">
         {/** post feed */}
-        <div className="w-160">
+        <div className="w-full md:w-160 ">
           {posts?.map((post) => (
             <PostCard post={post} key={post.identifier} />
           ))}
         </div>
         {/** side bar */}
-        <div className="ml-6 w-80">
+        <div className="hidden px-4 ml-6 md:block w-80 md:p-0">
           <div className="bg-white rounded">
             <div className="p-4 border-b-2">
               <p className="text-lg font-semibold text-center">
@@ -41,19 +46,21 @@ export default function Home() {
               </p>
             </div>
             <div>
-              {topSubs?.map((sub: Sub) => (
+              {topSubs?.map((sub) => (
                 <div
                   key={sub.name}
                   className="flex items-center px-4 py-2 text-xs border-b"
                 >
                   <Link href={`/f/${sub.name}`}>
-                    <Image
-                      src={sub.imageUrl}
-                      className="rounded-full cursor-pointer"
-                      alt="Sub"
-                      width={(6 * 16) / 4}
-                      height={(6 * 16) / 4}
-                    />
+                    <a>
+                      <Image
+                        src={sub.imageUrl}
+                        className="rounded-full cursor-pointer"
+                        alt="Sub"
+                        width={(6 * 16) / 4}
+                        height={(6 * 16) / 4}
+                      />
+                    </a>
                   </Link>
 
                   <Link href={`/f/${sub.name}`}>
@@ -65,6 +72,17 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            {/** button for creating a sub */}
+            {/** we will only allow if they are already authenticated */}
+            {authenticated && (
+              <div className="p-4 border-t-2">
+                <Link href="/subs/create">
+                  <a className="w-full px-2 py-2 blue button">
+                    create a commumity
+                  </a>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
