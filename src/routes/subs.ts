@@ -162,9 +162,54 @@ const uploadSubImage = async (req: Request, res: Response) => {
   }
 };
 
+// searching for subs
+const searchSubs = async (req: Request, res: Response) => {
+  try {
+    const name = req.params.name;
+
+    if (isEmpty(name)) {
+      return res.status(400).json({ error: "name must not be empty!" });
+    }
+
+    /**
+     * writing the subs can be different
+     * like reactjs and reacrJS can be two different subs
+     * as it is case sensitive
+     *
+     * but our search bar should be able to get that other reactjs as a search result
+     *
+     * for it, using querybuilder
+     */
+
+    const subs = await getRepository(Sub)
+      .createQueryBuilder()
+      /**
+       *
+       * ea => react if we use %% sign on both side of the string
+       * if we use it like that it gives the sql to know that we are searching for some marginal
+       *
+       * if one use % on the end point it means one have to put right characters
+       * of the starting of the subname so that it will feel like an auto complete
+       * and a good prediction
+       *
+       */
+      .where("LOWER(name) LIKE :name", {
+        name: `${name.toLowerCase().trim()}%`,
+      })
+      .getMany();
+
+    // returning the result
+    return res.json(subs);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "something went wrong!" });
+  }
+};
+
 const router = Router();
 router.post("/", user, auth, createSub);
 router.get("/:name", user, getSub);
+router.get("/search/:name", searchSubs);
 router.post(
   "/:name/image",
   user,

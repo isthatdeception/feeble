@@ -7,6 +7,7 @@ import Axios from "axios";
 // relative import
 import Sidebar from "../../../components/Sidebar";
 import { Post, Sub } from "../../../types";
+import { GetServerSideProps } from "next";
 
 // post submit page
 export default function submit() {
@@ -96,3 +97,31 @@ export default function submit() {
     </div>
   );
 }
+
+/**
+ * above code handles the part on client side
+ * but one can still access the submit page by typing manually
+ * that leaves us to create a way to connect and validate through
+ * the server side of the app
+ *
+ * as we cannot allow one to post something even without logging in or
+ * take a glimpse of the submit page wihout logging in
+ */
+
+/// is user is authenticated ?
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  try {
+    const cookie = req.headers.cookie;
+    if (!cookie) throw new Error("missing auth token cookie!!");
+
+    // if we have a cookie, we just send a request
+    await Axios.get("/auth/me", { headers: { cookie } });
+
+    // empty as all we needed is to check
+    return { props: {} };
+  } catch (err) {
+    // all 300 codes are typically redirecting status codes
+    // redirecting it to the login page for further authentication
+    res.writeHead(307, { Location: "/login" }).end();
+  }
+};
