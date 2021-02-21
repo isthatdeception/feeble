@@ -1,6 +1,8 @@
+// package-import
 import Link from "next/link";
 import Axios from "axios";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 // extra time plugin
 import dayjs from "dayjs";
@@ -9,12 +11,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 // relative import
 import { Post } from "../types";
 import ActionButton from "./ActionButton";
+import { useAuthState } from "../context/auth";
 
 dayjs.extend(relativeTime);
 
 // interface
 interface PostCardProps {
   post: Post;
+  revalidate?: Function;
 }
 
 export default function PostCard({
@@ -32,15 +36,28 @@ export default function PostCard({
     url,
     username,
   },
+  revalidate,
 }: PostCardProps) {
+  const { authenticated } = useAuthState();
+
+  const router = useRouter();
   // for votes to funcitonal on postcard
   const vote = async (value: number) => {
+    // if one is not authenticated and try to vote we need to get them authenticated
+    if (!authenticated) router.push("/login");
+
+    // if user double clicks the vote or vote an existing vote we will set
+    // the value of it to 0
+    if (value === userVote) value = 0;
+
     try {
       const res = await Axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       });
+
+      if (revalidate) revalidate();
 
       console.log(res.data);
     } catch (err) {
@@ -49,7 +66,11 @@ export default function PostCard({
   };
 
   return (
-    <div key={identifier} className="flex mb-4 bg-white rounded">
+    <div
+      key={identifier}
+      className="flex mb-4 bg-white rounded"
+      id={identifier}
+    >
       {/**vote section */}
       <div className="w-10 py-4 text-center bg-gray-200 rounded-l">
         {/** upVote  */}

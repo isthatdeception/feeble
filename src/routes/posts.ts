@@ -36,11 +36,31 @@ const createPost = async (req: Request, res: Response) => {
  * one should be able to get all the recent posts
  */
 
-const getPosts = async (_: Request, res: Response) => {
+const getPosts = async (req: Request, res: Response) => {
+  /**
+   * the problem with fetching all the posts is if we grew larger the amount of the
+   * post keeps getting bigger because of that, one needs to margin the overall
+   * recent posts a user can see
+   *
+   * to ensure this one can always go to the old school pagination but this is not 90's
+   * thats why we will use infinite scrolling
+   */
+
+  /**
+   * Infinite scroll is mostly used to increase user comfort when navigating a website.
+   * This solution means that you don’t have to click the next page number
+   * and wait for it to fully load to get the desired content.
+   */
+
+  const currentPage: number = (req.query.page || 0) as number;
+  const postsPerPage: number = (req.query.count || 8) as number;
+
   try {
     const posts = await Post.find({
       order: { createdAt: "DESC" },
       relations: ["comments", "votes", "sub"],
+      skip: currentPage * postsPerPage,
+      take: postsPerPage,
     });
 
     // if logged in we need to show their vote on the post

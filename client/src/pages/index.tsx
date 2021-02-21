@@ -1,9 +1,10 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 // hook
-import useSWR from "swr";
+import useSWR, { useSWRInfinite } from "swr";
 
 // time on app
 import dayjs from "dayjs";
@@ -19,11 +20,65 @@ dayjs.extend(relativeTime);
 
 export default function Home() {
   // local context
-  const { data: posts } = useSWR<Post[]>("/posts");
+  // const { data: posts } = useSWR<Post[]>("/posts");
   const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
 
   // global state
+  const [observedPost, setObservedPost] = useState("");
+
+  // utils
   const { authenticated } = useAuthState();
+
+  /**
+   * swr infinite loading hook
+   * read the docs infinite laoding for further needs
+   */
+
+  const {
+    data,
+    error,
+    mutate,
+    size: page,
+    setSize: setPage,
+    isValidating,
+    revalidate,
+  } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
+
+  const posts: Post[] = data ? [].concat(...data) : [];
+
+  // tracking hook
+  useEffect(() => {
+    // if there is nothing left
+    if (!posts || posts.length === 0) return;
+
+    // we need to access to the last one
+    const id = posts[posts.length - 1].identifier;
+
+    if (id !== observedPost) {
+      // will track this by their id
+      // old school stuff
+      setObservedPost(id);
+      observeElement(document.getElementById(id));
+    }
+  }, [posts]);
+
+  // observer [tracking]
+  const observeElement = (element: HTMLElement) => {
+    if (!element) return;
+    // provides the way to efficiently track the page content
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // if it is true there is a target that is intersecting
+        if (entries[0].isIntersecting === true) {
+          console.log("Reached bottom part of the post");
+          setPage(page + 1);
+          observer.unobserve(element);
+        }
+      },
+      { threshold: 1 }
+    );
+    observer.observe(element);
+  };
 
   return (
     <>
@@ -32,13 +87,24 @@ export default function Home() {
       </Head>
       <div className="container flex pt-4">
         {/** post feed */}
-        <div className="w-full md:w-160 ">
+        <div className="w-full px-4 md:w-160 md:p-0">
+          {/** loading */}
+          {isValidating && (
+            <p className="text-lg text-center">no posts submitted yet!</p>
+          )}
           {posts?.map((post) => (
-            <PostCard post={post} key={post.identifier} />
+            <PostCard
+              post={post}
+              key={post.identifier}
+              revalidate={revalidate}
+            />
           ))}
+          {isValidating && posts.length > 0 && (
+            <p className="text-lg text-center">no posts submitted yet!</p>
+          )}
         </div>
         {/** side bar */}
-        <div className="hidden px-4 ml-6 md:block w-80 md:p-0">
+        <div className="hidden ml-6 md:block w-80">
           <div className="bg-white rounded">
             <div className="p-4 border-b-2">
               <p className="text-lg font-semibold text-center">
