@@ -13,7 +13,7 @@ import "../styles/icons.css"; // made with iconmoon
 
 import Navbar from "../components/Navbar"; // navbar as a global thing for our page
 
-Axios.defaults.baseURL = "http://localhost:5000/api";
+Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
 Axios.defaults.withCredentials = true; // this takes use of cookies globally throughout the app
 
 function App({ Component, pageProps }: AppProps) {

@@ -16,6 +16,24 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <title>feeble</title>
+          <link rel="icon" type="image/svg+xml" href="/coffee.svg" />
+          {/** starting metas */}
+          <meta property="og:site_name" content="feeble" />
+          {/* <meta property="twitter:site" content="@feeble" /> */}
+
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:image"
+            content={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/coffee.svg`}
+          />
+          {/** meta property for twitter handle for our webpage */}
+          <meta property="twitter:card" content="summary" />
+          <meta
+            property="twitter:image"
+            content={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/coffee.svg`}
+          />
+
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600&display=swap"

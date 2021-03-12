@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import Axios from "axios";
 import classNames from "classnames";
+import { FormEvent, useEffect, useState } from "react";
 
 // extra time plugin
 import dayjs from "dayjs";
@@ -17,7 +18,6 @@ import { Post, Comment } from "../../../../types";
 import Sidebar from "../../../../components/Sidebar";
 import { useAuthState } from "../../../../context/auth";
 import ActionButton from "../../../../components/ActionButton";
-import { FormEvent, useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -25,6 +25,7 @@ dayjs.extend(relativeTime);
 export default function PostPage() {
   /// local state
   const [newComment, setNewComment] = useState("");
+  const [description, setDescription] = useState("");
 
   ///global state
   const { authenticated, user } = useAuthState();
@@ -42,6 +43,13 @@ export default function PostPage() {
   );
 
   if (error) router.push("/");
+
+  useEffect(() => {
+    if (!post) return;
+    let desc = post.body || post.title;
+    desc.substring(0, 159).concat(".."); // like hello world..
+    setDescription(desc);
+  }, [post]);
 
   const vote = async (value: number, comment?: Comment) => {
     // checking if the user is logged in or not
@@ -65,6 +73,7 @@ export default function PostPage() {
         value,
       });
 
+      // refetch the component for frequent updation
       revalidate();
     } catch (err) {
       console.log(err);
@@ -83,6 +92,7 @@ export default function PostPage() {
 
       setNewComment("");
 
+      // refetch the component for frequent updation
       revalidate();
     } catch (err) {
       console.log(err);
@@ -93,6 +103,12 @@ export default function PostPage() {
     <>
       <Head>
         <title>{post?.title}</title>
+        {/** meta tags for slugs */}
+        <meta name="description" content={description}></meta>
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={post?.title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:title" content={post?.title} />
       </Head>
       <Link href={`/f/${sub}`}>
         <a>

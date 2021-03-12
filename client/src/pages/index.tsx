@@ -29,6 +29,12 @@ export default function Home() {
   // utils
   const { authenticated } = useAuthState();
 
+  // meta tag varriable for good seo
+  // search engine optimization
+  const title = "Feeble: wish on moon";
+  const description =
+    "Searching for people having same intrests as you. You are in the right place, Feeble is here for you. Interact, say and bring in the next interesting topic.";
+
   /**
    * swr infinite loading hook
    * read the docs infinite laoding for further needs
@@ -37,12 +43,14 @@ export default function Home() {
   const {
     data,
     error,
-    mutate,
     size: page,
     setSize: setPage,
     isValidating,
     revalidate,
   } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
+
+  // this will be only true when we are first loading
+  const isinitialLoading = !data && !error;
 
   const posts: Post[] = data ? [].concat(...data) : [];
 
@@ -62,6 +70,8 @@ export default function Home() {
     }
   }, [posts]);
 
+  // tracks the intersection point of the page
+  // developed with the concept of pagination
   // observer [tracking]
   const observeElement = (element: HTMLElement) => {
     if (!element) return;
@@ -83,13 +93,20 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Feeble: wish on moon</title>
+        <title>{title}</title>
+        {/** metatag */}
+        {/** description */}
+        <meta name="description" content={description}></meta>
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:title" content={title} />
       </Head>
       <div className="container flex pt-4">
         {/** post feed */}
         <div className="w-full px-4 md:w-160 md:p-0">
           {/** loading */}
-          {isValidating && (
+          {isinitialLoading && (
             <p className="text-lg text-center">no posts submitted yet!</p>
           )}
           {posts?.map((post) => (

@@ -1,6 +1,6 @@
 // dynamic routes
 // best practice to have [] on the name
-
+// for dynamic routes
 import Head from "next/head";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -90,7 +90,7 @@ export default function SubPage() {
     );
   } else {
     postsMarkUp = sub.posts.map((post) => (
-      <PostCard key={post.identifier} post={post} />
+      <PostCard key={post.identifier} post={post} revalidate={revalidate} />
     ));
   }
 

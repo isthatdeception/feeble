@@ -35,12 +35,16 @@ export default function PostCard({
     commentCount,
     url,
     username,
+    sub,
   },
   revalidate,
 }: PostCardProps) {
   const { authenticated } = useAuthState();
 
   const router = useRouter();
+
+  const isInSubPage = router.pathname === "/f/[sub]"; // pattern /r/[sub]
+
   // for votes to funcitonal on postcard
   const vote = async (value: number) => {
     // if one is not authenticated and try to vote we need to get them authenticated
@@ -100,22 +104,25 @@ export default function PostCard({
       {/**post section */}
       <div className="w-full p-2">
         <div className="flex item-center">
-          <Link href={`/f/${subName}`}>
+          {/** checking if we are in sub page or not */}
+          {!isInSubPage && (
             <>
-              <img
-                src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                className="w-6 h-6 mr-1 rounded-full cursor-pointer"
-              />
+              <Link href={`/f/${subName}`}>
+                <img
+                  src={sub?.imageUrl}
+                  className="w-6 h-6 mr-1 rounded-full cursor-pointer"
+                />
+              </Link>
+              <Link href={`/f/${subName}`}>
+                <a className="text-xs font-bold cursor-pointer hover:underline">
+                  /f/{subName}
+                </a>
+              </Link>
+              <span className="mx-1 text-xs text-gray-400">∙</span>
             </>
-          </Link>
-          <Link href={`/f/${subName}`}>
-            <a className="text-xs font-bold cursor-pointer hover:underline">
-              /f/{subName}
-            </a>
-          </Link>
+          )}
 
-          <p className="text-xs text-gray-400 p">
-            <span className="mx-1">∙</span>
+          <p className="text-xs text-gray-400 ">
             posted by
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/${username}</a>
