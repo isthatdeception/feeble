@@ -18,13 +18,14 @@ import useSWR from "swr";
 import PostCard from "../../components/PostCard";
 import { Comment, Post } from "../../types";
 
+// user page
 export default function user() {
   const router = useRouter();
   const username = router.query.username;
 
   const { data, error } = useSWR<any>(username ? `/user/${username}` : null);
 
-  if (error) router.push("/");
+  if (error) router.push("/"); // if error occured redirect to the homepage to avoid crashing
   if (data) console.log(data);
   return (
     <>

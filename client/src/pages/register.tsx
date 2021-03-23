@@ -32,6 +32,7 @@ export default function Register() {
    * this makes it easier as system has to be more reliant toward token
    */
 
+  // if the user is valid we will push him to the homepage as he still has a valid active token
   if (authenticated) router.push("/");
 
   // submitting the form so the details should be posted to the server
@@ -48,10 +49,13 @@ export default function Register() {
      */
 
     if (!agreement) {
+      // if agreement is not checked out we wil throw the error
       setErrors({ ...errors, agreement: "You must agree to the T&C" });
       return;
     }
 
+    // if the upper condition is not met then it means the user has checked out all the agreements
+    // this means we can validate the user credentials and make that a potential user
     try {
       await Axios.post("/auth/register", {
         email,
@@ -59,8 +63,11 @@ export default function Register() {
         username,
       });
 
+      // once the registeration of the user is successful, we will make him login again
+      // by redirecting to the login page
       router.push("/login");
     } catch (err) {
+      // throw error if something went wrong
       setErrors(err.response.data);
     }
   };

@@ -51,6 +51,7 @@ export default function PostPage() {
     setDescription(desc);
   }, [post]);
 
+  // for vote action
   const vote = async (value: number, comment?: Comment) => {
     // checking if the user is logged in or not
     // if not we will redirect him to login page as he click
@@ -81,8 +82,10 @@ export default function PostPage() {
   };
 
   const submitComment = async (event: FormEvent) => {
+    // form event to prevent the default loading of page
     event.preventDefault();
 
+    // if comment is empty do not submit
     if (newComment.trim() === "") return;
 
     try {
@@ -90,6 +93,7 @@ export default function PostPage() {
         body: newComment,
       });
 
+      // setting up of the new comment
       setNewComment("");
 
       // refetch the component for frequent updation

@@ -52,6 +52,7 @@ export default function Home() {
   // this will be only true when we are first loading
   const isinitialLoading = !data && !error;
 
+  // posts are concatenating to each other
   const posts: Post[] = data ? [].concat(...data) : [];
 
   // tracking hook

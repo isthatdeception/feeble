@@ -48,6 +48,7 @@ export default function SubPage() {
 
   // use state to effect
   useEffect(() => {
+    // if there is not a sub then just return
     if (!sub) return;
     setOwnSub(authenticated && user.username === sub.username);
   }, [sub]);

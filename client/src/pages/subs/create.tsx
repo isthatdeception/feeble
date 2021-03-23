@@ -23,6 +23,7 @@ export default function create() {
   const router = useRouter();
 
   const submitForm = async (event: FormEvent) => {
+    // to avoid relaoding of the page
     event.preventDefault();
 
     try {

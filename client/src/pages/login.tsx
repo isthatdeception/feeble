@@ -46,6 +46,7 @@ export default function Register() {
 
       router.back();
     } catch (err) {
+      // get the errors back
       setErrors(err.response.data);
     }
   };
